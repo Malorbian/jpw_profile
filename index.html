@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JPW Portfolio</title>
+  <link rel="stylesheet" href="style.css">
+  
+</head>
+<body>
+
+  <nav class="navbar">
+    <a href="#about">About</a>
+    <a href="#skills">Skills</a>
+    <a href="#projects">Projects</a>
+    <a href="#cv">CV</a>
+  </nav>
+
+  <!-- Theme toggle (top-right) -->
+  <button id="theme-toggle" class="theme-toggle" aria-pressed="false" aria-label="Toggle dark mode">
+    <!-- Moon by default (dark mode) -->
+    <svg id="theme-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+    </svg>
+  </button>
+
+
+  <main>
+    <section id="about">
+      <div class="section-inner">
+        <h1>About</h1>
+        <h2 class="subtext">
+          I'm <b>Jan-Phillipp Wehnert</b>,
+        </h2>
+        <p class="subtext">
+          a passionate developer with a love for creating games and small projects. <br><br>
+          Finishing my studies in computer science, I am eager to apply my skills in real-world applications and continue learning in the ever-evolving tech landscape. As my bachelor thesis, I developed a 3D game in Unity where the level foundation is procedurally generated using real GeoJSON data.
+        </p>
+
+      </div>
+    </section>
+
+    <section id="skills">
+      <div class="section-inner">
+        <h1>Skills</h1>
+        <p class="subtext">
+          Eine Übersicht über deine Fähigkeiten und Technologien.
+        </p>
+      </div>
+    </section>
+
+    <section id="projects">
+      <div class="section-inner">
+        <h1>Projects</h1>
+        <p class="subtext">Projektbeschreibungen, Links und Screenshots.</p>
+      </div>
+    </section>
+
+    <section id="cv">
+      <div class="section-inner">
+        <h1>CV</h1>
+        <p class="subtext">Downloadbarer Lebenslauf oder Kurzprofil.</p>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const navLinks = document.querySelectorAll('.navbar a');
+      const sections = document.querySelectorAll('section[id]');
+
+      // IntersectionObserver to detect which section is mostly visible
+      const observerOptions = { root: null, rootMargin: '0px', threshold: 0.55 };
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          const id = entry.target.getAttribute('id');
+          const link = document.querySelector('.navbar a[href="#' + id + '"]');
+          if (!link) return;
+          if (entry.isIntersecting) {
+            navLinks.forEach(a => a.classList.remove('active'));
+            link.classList.add('active');
+            navLinks.forEach(a => a.removeAttribute('aria-current'));
+            link.setAttribute('aria-current', 'page');
+          }
+        });
+      }, observerOptions);
+
+      sections.forEach(section => {
+        // allow CSS to offset for fixed navbar when using scrollIntoView
+        section.style.scrollMarginTop = '120px';
+        observer.observe(section);
+      });
+
+      // Smooth scrolling for clicks (scroll-behavior supported by CSS too)
+      navLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          const target = document.querySelector(link.getAttribute('href'));
+          if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+      });
+
+      // Theme toggle: default = 'dark'
+      const themeToggle = document.getElementById('theme-toggle');
+      const themeIcon = document.getElementById('theme-icon');
+
+      function setTheme(mode) {
+        const html = document.documentElement;
+        if (mode === 'light') {
+          html.classList.add('light');
+          themeToggle.setAttribute('aria-pressed', 'true');
+          // sun icon
+          themeIcon.innerHTML = '<path d="M12 3v2M12 19v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10z" />';
+        } else {
+          html.classList.remove('light');
+          themeToggle.setAttribute('aria-pressed', 'false');
+          // moon icon
+          themeIcon.innerHTML = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />';
+        }
+        try { localStorage.setItem('theme', mode); } catch (e) { /* ignore */ }
+      }
+
+      // initialize theme (default dark)
+      const storedTheme = localStorage.getItem('theme');
+      setTheme(storedTheme === 'light' ? 'light' : 'dark');
+
+      themeToggle.addEventListener('click', () => {
+        const isLight = document.documentElement.classList.contains('light');
+        setTheme(isLight ? 'dark' : 'light');
+      });
+    });
+  </script>
+
+</body>
+</html>

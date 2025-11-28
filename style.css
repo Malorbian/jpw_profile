@@ -1,0 +1,212 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    font-family: 'Inter', sans-serif;
+    background: transparent;
+    color: var(--text);
+}
+
+/* Background stars */
+body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: radial-gradient(var(--star-color) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    opacity: 0.2;
+}
+
+/* Theme color variables: dark is default; html.light overrides for light theme */
+:root {
+    --bg: radial-gradient(circle at 20% 30%, #1a1a3a, #000 60%);
+    --text: #f1f1f1;
+    --star-color: #ffffff15;
+    --muted: #bbb;
+
+    --navbar-bg: rgba(255,255,255,0.08);
+    --navbar-text: #ddd;
+    --link-hover: #fff;
+    --active-bg: rgba(255,255,255,0.12);
+    --active-text: #fff;
+
+    --primary-bg: rgba(255,255,255,0.15);
+    --primary-hover: rgba(255,255,255,0.25);
+    --primary-text: var(--text);
+
+    --toggle-bg: rgba(255,255,255,0.08);
+    --toggle-color: #ddd;
+
+    --shadow-lg: 0 10px 40px rgba(0,0,0,0.4);
+    --shadow-md: 0 6px 18px rgba(0,0,0,0.35);
+    --shadow-sm: 0 6px 14px rgba(0,0,0,0.06);
+
+    --focus-outline: rgba(255,255,255,0.12);
+}
+
+html.light {
+    /* slightly darker light background with a circular radial gradient (similar to dark theme) */
+        --bg: radial-gradient(circle at 20% 30%, #dfe6f5 0%, #eef3fb 45%, #f9fbff 100%);
+    --text: #111;
+    --star-color: #00000012;
+    --muted: #666;
+
+    /* Make navbar/toggle box background darker in light theme for better contrast */
+    --navbar-bg: rgba(0,0,0,0.10);
+    --navbar-text: #333;
+    --link-hover: #000;
+    --active-bg: rgba(0,0,0,0.06);
+    --active-text: #111;
+
+    --primary-bg: rgba(0,0,0,0.06);
+    --primary-hover: rgba(0,0,0,0.08);
+    --primary-text: var(--text);
+
+    --toggle-bg: rgba(0,0,0,0.08);
+    --toggle-color: #333;
+
+    --shadow-lg: 0 6px 22px rgba(0,0,0,0.06);
+    --shadow-md: 0 6px 14px rgba(0,0,0,0.06);
+    --shadow-sm: 0 6px 14px rgba(0,0,0,0.06);
+
+    --focus-outline: rgba(0,0,0,0.06);
+}
+
+/* NAVBAR */
+.navbar {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--navbar-bg);
+    backdrop-filter: blur(15px);
+    border-radius: 999px;
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    box-shadow: var(--shadow-lg);
+}
+
+.navbar a {
+    text-decoration: none;
+    color: var(--navbar-text);
+    font-size: 14px;
+    transition: color 0.25s ease, background-color 0.25s ease, box-shadow 0.25s ease;
+    /* Keep padding/height consistent so the navbar doesn't resize when active changes */
+    padding: 8px 14px;
+    display: inline-flex;
+    align-items: center;
+    border-radius: 999px;
+}
+
+.navbar a:hover {
+    color: var(--link-hover);
+}
+
+.subtext {
+    margin-top: 25px;
+    color: var(--muted);
+    font-size: 1.1rem;
+}
+
+.profile-line {
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+}
+
+.actions {
+    margin-top: 40px;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.primary-btn {
+    background: var(--primary-bg);
+    padding: 14px 26px;
+    border-radius: 999px;
+    font-weight: 500;
+    text-decoration: none;
+    color: var(--primary-text);
+    transition: 0.3s ease;
+}
+
+.primary-btn:hover {
+    background: var(--primary-hover);
+}
+
+/* Theme toggle (top-right) */
+.theme-toggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: var(--toggle-bg);
+    backdrop-filter: blur(15px);
+    border-radius: 999px;
+    padding: 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    color: var(--toggle-color);
+    border: none;
+    cursor: pointer;
+    box-shadow: var(--shadow-lg);
+    transition: background-color 0.25s ease, color 0.25s ease, box-shadow 0.25s ease, transform 0.12s ease;
+}
+
+.theme-toggle:active { transform: translateY(1px); }
+.theme-toggle svg { display: block; width: 20px; height: 20px; }
+
+/* Theme colors are provided via CSS custom properties in :root and html.light above. */
+
+/* Scroll / Sections / Active link */
+html {
+    scroll-behavior: smooth;
+    background: var(--bg);
+    color: var(--text);
+}
+
+/* Ensure content is not hidden behind the fixed navbar */
+main {
+    padding-top: 120px;
+}
+
+section {
+    min-height: 100vh;
+    padding: 40px 20px 80px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+}
+
+.section-inner {
+    width: 100%;
+    max-width: 980px;
+}
+
+.navbar a.active {
+    background-color: var(--active-bg);
+    color: var(--active-text);
+    box-shadow: var(--shadow-md);
+}
+
+/* Improve focus visibility for keyboard users */
+.navbar a:focus {
+    outline: 2px solid var(--focus-outline);
+}
+
+/* Provide a scroll offset for in-page anchors in browsers that don't use scrollMarginTop from JS */
+section {
+    scroll-margin-top: 120px;
+}
