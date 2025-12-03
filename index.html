@@ -117,50 +117,71 @@
     <section id="projects">
       <div class="section-inner">
         <h1>Projects</h1>
-        <p class="subtext">Projektbeschreibungen, Links und Screenshots.</p>
 
         <div class="projects-container">
-          <div class="projects-left">
-            <!-- Games screenshots -->
-            <div class="shot" data-project="proc-terrain" aria-hidden="true">Procedural Terrain Runner — Screenshot 1</div>
-            <div class="shot" data-project="proc-terrain" aria-hidden="true">Procedural Terrain Runner — Screenshot 2</div>
 
-            <div class="shot" data-project="retro-puzzle" aria-hidden="true">Retro Puzzle Demo — Screenshot 1</div>
-            <div class="shot" data-project="retro-puzzle" aria-hidden="true">Retro Puzzle Demo — Screenshot 2</div>
-
-            <!-- Small Apps screenshots -->
-            <div class="shot" data-project="geojson-vis" aria-hidden="true">GeoJSON Visualizer — Preview 1</div>
-            <div class="shot" data-project="geojson-vis" aria-hidden="true">GeoJSON Visualizer — Preview 2</div>
-
-            <div class="shot" data-project="build-tools" aria-hidden="true">Build Tools CLI — Output 1</div>
-            <div class="shot" data-project="build-tools" aria-hidden="true">Build Tools CLI — Output 2</div>
-          </div>
-
-          <div class="projects-right">
-            <div class="project-panel" data-project="proc-terrain">
-              <h4 class="project-title">Procedural Terrain Runner</h4>
-              <a class="project-link" href="#" target="_blank" rel="noopener">Demo / Details</a>
-              <p class="project-desc">A Unity runner prototype with procedurally generated levels using GeoJSON building blocks. Designed to test procedural placement and performance.</p>
+          <div class="project-group">
+            <div class="project-left">
+              <div class="shot" aria-hidden="true">Procedural Terrain Runner — Screenshot 1</div>
+              <div class="shot" aria-hidden="true">Procedural Terrain Runner — Screenshot 2</div>
             </div>
-
-            <div class="project-panel" data-project="retro-puzzle">
-              <h4 class="project-title">Retro Puzzle Demo</h4>
-              <a class="project-link" href="#" target="_blank" rel="noopener">Play / Details</a>
-              <p class="project-desc">A small experimental puzzle game built with Unity. Focuses on level design and compact mechanics for quick play sessions.</p>
-            </div>
-
-            <div class="project-panel" data-project="geojson-vis">
-              <h4 class="project-title">GeoJSON Visualizer</h4>
-              <a class="project-link" href="#" target="_blank" rel="noopener">Repo / Demo</a>
-              <p class="project-desc">A lightweight tool that renders GeoJSON layers and lets you tweak generation parameters. Useful for prototyping map-driven levels.</p>
-            </div>
-
-            <div class="project-panel" data-project="build-tools">
-              <h4 class="project-title">Build Tools CLI</h4>
-              <a class="project-link" href="#" target="_blank" rel="noopener">Source</a>
-              <p class="project-desc">Small command-line utilities to automate build steps and packaging for hobby projects. Includes simple config and logging.</p>
+            <div class="project-right">
+              <div class="project-panel">
+                <h4 class="project-title">Luminescent Maze</h4>
+                <a class="project-link" href="#" target="_blank" rel="noopener">Play on itch.io</a>
+                <p class="project-desc">My bachelor thesis project. A small horror game set inside a procedurally generated building based on real GeoJSON data. Except for the player controller, all coding is done by me. Built in Unity with C#.</p>
+              </div>
             </div>
           </div>
+
+          <div class="project-group">
+            <div class="project-left">
+              <div class="shot" aria-hidden="true">Retro Puzzle Demo — Screenshot 1</div>
+              <div class="shot" aria-hidden="true">Retro Puzzle Demo — Screenshot 2</div>
+            </div>
+            <div class="project-right">
+              <div class="project-panel">
+                <h4 class="project-title">Write or Die</h4>
+                <a class="project-link" href="#" target="_blank" rel="noopener">Play on itch.io</a>
+                <p class="project-desc">
+                  A space invaders inspired 2D typing game where you fend off waves of enemies by typing words correctly. The menu navigation is also by typing. <b></b>
+                  We developed the game as a team in a two weeks long university project. I was part of every aspect of the development. Built in Unity with C#.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="project-group">
+            <div class="project-left">
+              <div class="shot" aria-hidden="true">GeoJSON Visualizer — Preview 1</div>
+              <div class="shot" aria-hidden="true">GeoJSON Visualizer — Preview 2</div>
+            </div>
+            <div class="project-right">
+              <div class="project-panel">
+                <h4 class="project-title">GeoJSON Visualizer</h4>
+                <a class="project-link" href="#" target="_blank" rel="noopener">Repo / Demo</a>
+                <p class="project-desc">Part of my bachelor thesis that creates a building based on GeoJSON data. Built in Unity with C#.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="project-group">
+            <div class="project-left">
+              <div class="shot" aria-hidden="true">Build Tools CLI — Output 1</div>
+              <div class="shot" aria-hidden="true">Build Tools CLI — Output 2</div>
+            </div>
+            <div class="project-right">
+              <div class="project-panel">
+                <h4 class="project-title">Small Data Base</h4>
+                <a class="project-link" href="#" target="_blank" rel="noopener">Source</a>
+                <p class="project-desc">
+                  A small database with a java swing gui. <b></b>
+                  I wanted a place where I can store a media collection (books, movies, videos, games) with custom attributes like tags, ratings (own and external), length, author, wish-/watchlisted, ... and the option to filter by them. Focus is on fast and extensive filtering. Not suited for larger data collecions, because whole collections is loaded into memory for faster filtering. Built in Java with Swing and mySQL.
+                </p>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div>
     </section>
@@ -181,10 +202,8 @@
                 <li>Bachelor thesis: 3D computer game in Unity with procedural level generation using real GeoJSON data</li>
                 <li>Interesting modules:
                   <ul class="submodules">
-                    <li>Algorithms & Data Structures</li>
-                    <li>Game Development & Real-time Rendering</li>
-                    <li>Software Engineering & Design Patterns</li>
-                    <li>Computer Graphics / 3D Math</li>
+                    <li>Game Studio: Development of a game in Unity in a small team over two weeks</li>
+                    <li>Graphics programming: Best course work</li>
                   </ul>
                 </li>
               </ul>

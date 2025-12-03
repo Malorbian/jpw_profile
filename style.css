@@ -24,8 +24,8 @@ body::before {
 
 /* Theme color variables: dark is default; html.light overrides for light theme */
 :root {
-    /* darker midnight-blue gradient whose center is left outside the viewport */
-    --bg: radial-gradient(circle at -20% 30%, #050719 0%, #000617 60%, #00010b 100%);
+    /* darker midnight-blue gradient (deeper, less contrast to avoid appearing black) */
+    --bg: radial-gradient(circle at 20% 30%, #050719 0%, #000617 60%, #00010b 100%);
     --text: #f1f1f1;
     --star-color: #ffffff15;
     --muted: #bbb;
@@ -51,9 +51,6 @@ body::before {
         --nav-offset: 120px; /* space used for sticky tops and nav offsets */
     /* page surface color (approximation used to derive chip background) */
     --page-surface: #000617; /* darker midnight-blue surface */
-    /* timeline gradient stops (dark mode defaults) */
-    --timeline-line-top: rgba(255,255,255,0.14);
-    --timeline-line-bottom: rgba(255,255,255,0.04);
     /* chip defaults fallback: semi-transparent darker than page */
     --chip-bg-default-fallback: rgba(0,0,0,0.18);
     --chip-text-default: var(--text); /* match main text color in dark mode */
@@ -89,9 +86,6 @@ html.light {
     /* chip defaults for light theme (fallback) */
     --chip-bg-default-fallback: #efefef; /* light gray background in light mode */
     --chip-text-default: #000000; /* text black in light mode */
-    /* timeline gradient stops for light theme: visible gray */
-    --timeline-line-top: rgba(0,0,0,0.12);
-    --timeline-line-bottom: rgba(0,0,0,0.06);
 }
 
 /* NAVBAR */
@@ -291,19 +285,18 @@ section {
 /* Projects */
 .projects-container {
     margin-top: 18px;
+    display: block;
+    gap: 32px;
+}
+
+.project-group {
     display: flex;
     gap: 24px;
+    align-items: stretch; /* ensure left and right columns span the same group height */
 }
 
-.projects-left {
-    width: 66%;
-}
-
-.projects-right {
-    width: 34%;
-    position: relative;
-    overflow: hidden; /* keep panels clipped while animating */
-}
+.project-left { width: 66%; }
+.project-right { width: 34%; position: relative; display: flex; flex-direction: column; }
 
 .shot {
     min-height: 80vh;
@@ -318,34 +311,17 @@ section {
 }
 
 .project-panel {
-    /* stack panels on top of each other; animate between them */
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
+    position: sticky;
+    top: var(--nav-offset);
+    align-self: flex-start; /* keep panel aligned to the top of the right column */
     background: transparent;
     padding: 0;
     border-radius: 0;
     box-shadow: none;
-    transform: translateY(8%);
-    opacity: 0;
-    transition: transform 360ms cubic-bezier(.2,.9,.2,1), opacity 260ms ease;
-    pointer-events: none;
 }
 
-.project-panel.active {
-    opacity: 1;
-    transform: translateY(0);
-    pointer-events: auto;
-    z-index: 2;
-}
-
-.project-panel.leaving {
-    opacity: 0;
-    transform: translateY(-8%);
-    pointer-events: none;
-    z-index: 1;
-}
+/* When a project-panel has .unstick, it should stop being sticky and scroll away */
+/* Removed .project-panel.unstick; JS now animates sticky `top` inline to smoothly move panels away. */
 
 .project-title { margin: 0 0 8px 0; font-size: 1.05rem; }
 .project-link { text-decoration: none; color: var(--link-hover); font-size: 0.95rem; }
@@ -354,7 +330,7 @@ section {
 @media (max-width: 880px) {
     .projects-container { flex-direction: column; }
     .projects-left, .projects-right { width: 100%; }
-    .project-panel { position: static; top: auto; transform: none; opacity: 1; pointer-events: auto; }
+    .project-panel { position: static; top: auto; }
 }
 
 /* top-blur removed: overlay/blur handled by no CSS (removed) */
@@ -401,8 +377,13 @@ section {
     top: 8px;
     bottom: 8px;
     width: 2px;
-    background: linear-gradient(to bottom, var(--timeline-line-top), var(--timeline-line-bottom));
+    background: linear-gradient(to bottom, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
     border-radius: 2px;
+}
+
+/* Light mode: make the CV timeline a visible light-gray line */
+html.light .cv-list::before {
+    background: linear-gradient(to bottom, rgba(0,0,0,0.12), rgba(0,0,0,0.06));
 }
 
 .cv-entry {

@@ -66,56 +66,58 @@ document.addEventListener('DOMContentLoaded', function () {
     setTheme(isLight ? 'dark' : 'light');
   });
 
-  // Project shots observer: keep right panel in sync with the shot currently visible
-  const shots = document.querySelectorAll('.shot');
-  const panels = document.querySelectorAll('.project-panel');
+  // Project panels: compute precise unstick condition using panel height and last shot midpoint.
+  // This avoids flicker from IntersectionObservers and handles re-sticking correctly while scrolling.
+  (function setupProjectUnstickChecks() {
+    const groups = Array.from(document.querySelectorAll('.project-group'));
+    if (!groups.length) return;
 
-  // Keep track of the currently active project id to animate transitions
-  let currentProjectId = null;
+    // read navOffset once per frame
+    let ticking = false;
 
-  function setActiveProject(id) {
-    if (id === currentProjectId) return;
-    const newPanel = document.querySelector(`.project-panel[data-project="${id}"]`);
-    const oldPanel = document.querySelector(`.project-panel[data-project="${currentProjectId}"]`);
+    function update() {
+      ticking = false;
+      const navOffset = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--nav-offset')) || 120;
+      groups.forEach(group => {
+        const shots = group.querySelectorAll('.shot');
+        const panel = group.querySelector('.project-panel');
+        if (!panel || !shots.length) return;
+        const lastShot = shots[shots.length - 1];
+        const panelRect = panel.getBoundingClientRect();
+        const lastRect = lastShot.getBoundingClientRect();
 
-    // animate old panel up and remove active
-    if (oldPanel) {
-      oldPanel.classList.remove('active');
-      oldPanel.classList.add('leaving');
-      const cleanup = (e) => {
-        // wait for opacity/transform transition to finish
-        if (e.propertyName === 'transform' || e.propertyName === 'opacity') {
-          oldPanel.classList.remove('leaving');
-          oldPanel.removeEventListener('transitionend', cleanup);
+        // compute panel bottom when sticky: navOffset + panelHeight (in viewport coords)
+        const panelHeight = panelRect.height;
+        const panelBottomIfSticky = navOffset + panelHeight;
+
+        // compute point at the last quarter of the final shot in viewport coordinates
+        const lastMidpoint = lastRect.top + (lastRect.height * 0.67);
+
+        // If the panel bottom would extend past the midpoint of the last shot,
+        // gradually move the sticky top upward so the panel scrolls away smoothly.
+        const shift = panelBottomIfSticky - lastMidpoint; // how many px the panel would overlap the midpoint
+        if (shift > 0) {
+          // reduce the sticky top so the panel moves up while still sticky
+          // allow it to move up beyond the viewport if shift is large
+          const newTop = Math.max(-panelHeight, navOffset - shift);
+          panel.style.top = newTop + 'px';
+        } else {
+          // reset to default sticky top
+          panel.style.top = '';
         }
-      };
-      oldPanel.addEventListener('transitionend', cleanup);
+      });
     }
 
-    // prepare and animate new panel from below
-    if (newPanel) {
-      newPanel.classList.remove('leaving');
-      // force reflow so the transition picks up
-      void newPanel.offsetHeight;
-      newPanel.classList.add('active');
-    }
-
-    currentProjectId = id;
-  }
-
-  // default to first project's id
-  if (shots.length) setActiveProject(shots[0].dataset.project);
-
-  const shotObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        const id = entry.target.dataset.project;
-        setActiveProject(id);
+    window.addEventListener('scroll', () => {
+      if (!ticking) {
+        window.requestAnimationFrame(update);
+        ticking = true;
       }
-    });
-  }, { root: null, threshold: 0.6 });
+    }, { passive: true });
 
-  shots.forEach(s => shotObserver.observe(s));
+    // also run once to initialize
+    update();
+  })();
 
   // Note: simplified blur behavior — only toggle the top overlay visibility based on scroll.
   // The `.top-blur` element height is controlled via CSS (`--nav-offset`) and we keep
