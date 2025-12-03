@@ -16,6 +16,8 @@
     <a href="#cv">CV</a>
   </nav>
 
+  <div class="top-blur" aria-hidden="true"></div>
+
   <!-- Theme toggle (top-right) -->
   <button id="theme-toggle" class="theme-toggle" aria-pressed="false" aria-label="Toggle dark mode">
     <!-- Moon by default (dark mode) -->
@@ -46,6 +48,73 @@
         <p class="subtext">
           Eine Übersicht über deine Fähigkeiten und Technologien.
         </p>
+
+        <div class="skills-grid">
+          <div class="skills-section">
+            <h3 class="skills-section-title">Core Skills</h3>
+            <div class="skills-row">
+              <button class="skill-chip lang-java" aria-label="Java">
+                <span class="skill-color" aria-hidden="true"></span>
+                <span class="skill-label">Java</span>
+              </button>
+
+              <button class="skill-chip lang-unity" aria-label="Unity">
+                <span class="skill-color" aria-hidden="true"></span>
+                <span class="skill-label">Unity</span>
+              </button>
+
+              <button class="skill-chip lang-windows" aria-label="Windows">
+                <span class="skill-color" aria-hidden="true"></span>
+                <span class="skill-label">Windows</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="skills-section">
+            <h3 class="skills-section-title">Other Skills</h3>
+            <div class="skills-row">
+              <button class="skill-chip lang-python" aria-label="Python">
+                <span class="skill-color" aria-hidden="true"></span>
+                <span class="skill-label">Python</span>
+              </button>
+
+              <button class="skill-chip lang-js" aria-label="JavaScript">
+                <span class="skill-color" aria-hidden="true"></span>
+                <span class="skill-label">JavaScript</span>
+              </button>
+
+              <button class="skill-chip lang-csharp" aria-label="C#">
+                <span class="skill-color" aria-hidden="true"></span>
+                <span class="skill-label">C#</span>
+              </button>
+
+              <button class="skill-chip lang-sql" aria-label="SQL">
+                <span class="skill-color" aria-hidden="true"></span>
+                <span class="skill-label">SQL</span>
+              </button>
+
+              <button class="skill-chip lang-msoffice" aria-label="MS Office">
+                <span class="skill-color" aria-hidden="true"></span>
+                <span class="skill-label">MS Office</span>
+              </button>
+
+              <button class="skill-chip lang-html" aria-label="HTML">
+                <span class="skill-color" aria-hidden="true"></span>
+                <span class="skill-label">HTML</span>
+              </button>
+
+              <button class="skill-chip lang-css" aria-label="CSS">
+                <span class="skill-color" aria-hidden="true"></span>
+                <span class="skill-label">CSS</span>
+              </button>
+
+              <button class="skill-chip lang-java-swing" aria-label="Java Swing">
+                <span class="skill-color" aria-hidden="true"></span>
+                <span class="skill-label">Java Swing</span>
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -53,6 +122,50 @@
       <div class="section-inner">
         <h1>Projects</h1>
         <p class="subtext">Projektbeschreibungen, Links und Screenshots.</p>
+
+        <div class="projects-container">
+          <div class="projects-left">
+            <!-- Games screenshots -->
+            <div class="shot" data-project="proc-terrain" aria-hidden="true">Procedural Terrain Runner — Screenshot 1</div>
+            <div class="shot" data-project="proc-terrain" aria-hidden="true">Procedural Terrain Runner — Screenshot 2</div>
+
+            <div class="shot" data-project="retro-puzzle" aria-hidden="true">Retro Puzzle Demo — Screenshot 1</div>
+            <div class="shot" data-project="retro-puzzle" aria-hidden="true">Retro Puzzle Demo — Screenshot 2</div>
+
+            <!-- Small Apps screenshots -->
+            <div class="shot" data-project="geojson-vis" aria-hidden="true">GeoJSON Visualizer — Preview 1</div>
+            <div class="shot" data-project="geojson-vis" aria-hidden="true">GeoJSON Visualizer — Preview 2</div>
+
+            <div class="shot" data-project="build-tools" aria-hidden="true">Build Tools CLI — Output 1</div>
+            <div class="shot" data-project="build-tools" aria-hidden="true">Build Tools CLI — Output 2</div>
+          </div>
+
+          <div class="projects-right">
+            <div class="project-panel" data-project="proc-terrain">
+              <h4 class="project-title">Procedural Terrain Runner</h4>
+              <a class="project-link" href="#" target="_blank" rel="noopener">Demo / Details</a>
+              <p class="project-desc">A Unity runner prototype with procedurally generated levels using GeoJSON building blocks. Designed to test procedural placement and performance.</p>
+            </div>
+
+            <div class="project-panel" data-project="retro-puzzle">
+              <h4 class="project-title">Retro Puzzle Demo</h4>
+              <a class="project-link" href="#" target="_blank" rel="noopener">Play / Details</a>
+              <p class="project-desc">A small experimental puzzle game built with Unity. Focuses on level design and compact mechanics for quick play sessions.</p>
+            </div>
+
+            <div class="project-panel" data-project="geojson-vis">
+              <h4 class="project-title">GeoJSON Visualizer</h4>
+              <a class="project-link" href="#" target="_blank" rel="noopener">Repo / Demo</a>
+              <p class="project-desc">A lightweight tool that renders GeoJSON layers and lets you tweak generation parameters. Useful for prototyping map-driven levels.</p>
+            </div>
+
+            <div class="project-panel" data-project="build-tools">
+              <h4 class="project-title">Build Tools CLI</h4>
+              <a class="project-link" href="#" target="_blank" rel="noopener">Source</a>
+              <p class="project-desc">Small command-line utilities to automate build steps and packaging for hobby projects. Includes simple config and logging.</p>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -64,73 +177,7 @@
     </section>
   </main>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      const navLinks = document.querySelectorAll('.navbar a');
-      const sections = document.querySelectorAll('section[id]');
-
-      // IntersectionObserver to detect which section is mostly visible
-      const observerOptions = { root: null, rootMargin: '0px', threshold: 0.55 };
-
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          const id = entry.target.getAttribute('id');
-          const link = document.querySelector('.navbar a[href="#' + id + '"]');
-          if (!link) return;
-          if (entry.isIntersecting) {
-            navLinks.forEach(a => a.classList.remove('active'));
-            link.classList.add('active');
-            navLinks.forEach(a => a.removeAttribute('aria-current'));
-            link.setAttribute('aria-current', 'page');
-          }
-        });
-      }, observerOptions);
-
-      sections.forEach(section => {
-        // allow CSS to offset for fixed navbar when using scrollIntoView
-        section.style.scrollMarginTop = '120px';
-        observer.observe(section);
-      });
-
-      // Smooth scrolling for clicks (scroll-behavior supported by CSS too)
-      navLinks.forEach(link => {
-        link.addEventListener('click', (e) => {
-          e.preventDefault();
-          const target = document.querySelector(link.getAttribute('href'));
-          if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        });
-      });
-
-      // Theme toggle: default = 'dark'
-      const themeToggle = document.getElementById('theme-toggle');
-      const themeIcon = document.getElementById('theme-icon');
-
-      function setTheme(mode) {
-        const html = document.documentElement;
-        if (mode === 'light') {
-          html.classList.add('light');
-          themeToggle.setAttribute('aria-pressed', 'true');
-          // sun icon
-          themeIcon.innerHTML = '<path d="M12 3v2M12 19v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10z" />';
-        } else {
-          html.classList.remove('light');
-          themeToggle.setAttribute('aria-pressed', 'false');
-          // moon icon
-          themeIcon.innerHTML = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />';
-        }
-        try { localStorage.setItem('theme', mode); } catch (e) { /* ignore */ }
-      }
-
-      // initialize theme (default dark)
-      const storedTheme = localStorage.getItem('theme');
-      setTheme(storedTheme === 'light' ? 'light' : 'dark');
-
-      themeToggle.addEventListener('click', () => {
-        const isLight = document.documentElement.classList.contains('light');
-        setTheme(isLight ? 'dark' : 'light');
-      });
-    });
-  </script>
+  <script src="script.js"></script>
 
 </body>
 </html>
