@@ -26,14 +26,7 @@ document.addEventListener('DOMContentLoaded', function () {
     observer.observe(section);
   });
 
-  // top blur overlay toggle: show a narrow blurred band before the navbar when user scrolls down
-  const topBlur = document.querySelector('.top-blur');
-  function updateTopBlur() {
-    const show = window.scrollY > 40; // simple threshold
-    topBlur.classList.toggle('visible', show);
-  }
-  updateTopBlur();
-  window.addEventListener('scroll', updateTopBlur, { passive: true });
+  // top-blur removed: no overlay toggling required
 
   // Smooth scrolling for clicks (scroll-behavior supported by CSS too)
   navLinks.forEach(link => {
@@ -76,8 +69,38 @@ document.addEventListener('DOMContentLoaded', function () {
   // Project shots observer: keep right panel in sync with the shot currently visible
   const shots = document.querySelectorAll('.shot');
   const panels = document.querySelectorAll('.project-panel');
+
+  // Keep track of the currently active project id to animate transitions
+  let currentProjectId = null;
+
   function setActiveProject(id) {
-    panels.forEach(p => p.classList.toggle('active', p.dataset.project === id));
+    if (id === currentProjectId) return;
+    const newPanel = document.querySelector(`.project-panel[data-project="${id}"]`);
+    const oldPanel = document.querySelector(`.project-panel[data-project="${currentProjectId}"]`);
+
+    // animate old panel up and remove active
+    if (oldPanel) {
+      oldPanel.classList.remove('active');
+      oldPanel.classList.add('leaving');
+      const cleanup = (e) => {
+        // wait for opacity/transform transition to finish
+        if (e.propertyName === 'transform' || e.propertyName === 'opacity') {
+          oldPanel.classList.remove('leaving');
+          oldPanel.removeEventListener('transitionend', cleanup);
+        }
+      };
+      oldPanel.addEventListener('transitionend', cleanup);
+    }
+
+    // prepare and animate new panel from below
+    if (newPanel) {
+      newPanel.classList.remove('leaving');
+      // force reflow so the transition picks up
+      void newPanel.offsetHeight;
+      newPanel.classList.add('active');
+    }
+
+    currentProjectId = id;
   }
 
   // default to first project's id
@@ -94,49 +117,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   shots.forEach(s => shotObserver.observe(s));
 
-  // Scroll-based blur using a top overlay: blur strength is driven by distance
-  const navbar = document.querySelector('.navbar');
-  const topBlurEl = document.querySelector('.top-blur');
-  // targets used to determine how close content is to the overlay: sections and shots
-  const distanceTargets = Array.from(document.querySelectorAll('section, .shot'));
-  let ticking = false;
-
-  function updateOnScroll() {
-    const navOffset = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--nav-offset')) || 120;
-    const overlayBottom = navOffset; // overlay top is 0
-
-    const transitionRange = 20; // px over which blur interpolates
-    const maxBlur = 6; // px maximum blur
-
-    // find nearest distance from any target's top to the overlay bottom
-    let minD = Infinity;
-    distanceTargets.forEach(el => {
-      const r = el.getBoundingClientRect();
-      const d = r.top - overlayBottom;
-      if (d < minD) minD = d;
-    });
-
-    let blur = 0;
-    if (minD <= 0) {
-      blur = maxBlur;
-    } else if (minD < transitionRange) {
-      blur = maxBlur * (1 - (minD / transitionRange));
-    } else {
-      blur = 0;
-    }
-
-    // set CSS variable used by the overlay's backdrop-filter
-    document.documentElement.style.setProperty('--top-blur', `${blur}px`);
-    topBlurEl.classList.toggle('visible', blur > 0);
-
-    ticking = false;
-  }
-
-  window.addEventListener('scroll', () => {
-    if (!ticking) {
-      window.requestAnimationFrame(updateOnScroll);
-      ticking = true;
-    }
-  }, { passive: true });
-  updateOnScroll();
+  // Note: simplified blur behavior — only toggle the top overlay visibility based on scroll.
+  // The `.top-blur` element height is controlled via CSS (`--nav-offset`) and we keep
+  // the earlier simple handler `updateTopBlur` (defined above) to show/hide the overlay.
 });

@@ -24,7 +24,8 @@ body::before {
 
 /* Theme color variables: dark is default; html.light overrides for light theme */
 :root {
-    --bg: radial-gradient(circle at 20% 30%, #1a1a3a, #000 60%);
+    /* darker midnight-blue gradient whose center is left outside the viewport */
+    --bg: radial-gradient(circle at -20% 30%, #050719 0%, #000617 60%, #00010b 100%);
     --text: #f1f1f1;
     --star-color: #ffffff15;
     --muted: #bbb;
@@ -49,7 +50,10 @@ body::before {
     --focus-outline: rgba(255,255,255,0.12);
         --nav-offset: 120px; /* space used for sticky tops and nav offsets */
     /* page surface color (approximation used to derive chip background) */
-    --page-surface: #0f1724;
+    --page-surface: #000617; /* darker midnight-blue surface */
+    /* timeline gradient stops (dark mode defaults) */
+    --timeline-line-top: rgba(255,255,255,0.14);
+    --timeline-line-bottom: rgba(255,255,255,0.04);
     /* chip defaults fallback: semi-transparent darker than page */
     --chip-bg-default-fallback: rgba(0,0,0,0.18);
     --chip-text-default: var(--text); /* match main text color in dark mode */
@@ -85,6 +89,9 @@ html.light {
     /* chip defaults for light theme (fallback) */
     --chip-bg-default-fallback: #efefef; /* light gray background in light mode */
     --chip-text-default: #000000; /* text black in light mode */
+    /* timeline gradient stops for light theme: visible gray */
+    --timeline-line-top: rgba(0,0,0,0.12);
+    --timeline-line-bottom: rgba(0,0,0,0.06);
 }
 
 /* NAVBAR */
@@ -92,7 +99,8 @@ html.light {
     position: fixed;
     top: 20px;
     left: 50%;
-    transform: translateX(-50%);
+    /* small nudge to account for rendering/zoom differences (Opera GX etc.) */
+    transform: translateX(calc(-50% + 1px));
     background: var(--navbar-bg);
     backdrop-filter: blur(15px);
     border-radius: 999px;
@@ -294,6 +302,7 @@ section {
 .projects-right {
     width: 34%;
     position: relative;
+    overflow: hidden; /* keep panels clipped while animating */
 }
 
 .shot {
@@ -309,18 +318,34 @@ section {
 }
 
 .project-panel {
-    display: none;
-    /* keep content but no visible box */
+    /* stack panels on top of each other; animate between them */
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
     background: transparent;
-    backdrop-filter: none;
-    padding: 0 0 0 0;
+    padding: 0;
     border-radius: 0;
     box-shadow: none;
-    position: sticky;
-    top: var(--nav-offset);
+    transform: translateY(8%);
+    opacity: 0;
+    transition: transform 360ms cubic-bezier(.2,.9,.2,1), opacity 260ms ease;
+    pointer-events: none;
 }
 
-.project-panel.active { display: block; }
+.project-panel.active {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+    z-index: 2;
+}
+
+.project-panel.leaving {
+    opacity: 0;
+    transform: translateY(-8%);
+    pointer-events: none;
+    z-index: 1;
+}
 
 .project-title { margin: 0 0 8px 0; font-size: 1.05rem; }
 .project-link { text-decoration: none; color: var(--link-hover); font-size: 0.95rem; }
@@ -329,27 +354,10 @@ section {
 @media (max-width: 880px) {
     .projects-container { flex-direction: column; }
     .projects-left, .projects-right { width: 100%; }
-    .project-panel { position: static; top: auto; }
+    .project-panel { position: static; top: auto; transform: none; opacity: 1; pointer-events: auto; }
 }
 
-/* top blur overlay used to softly blur content before it reaches the navbar area */
-.top-blur {
-    position: fixed;
-    left: 0;
-    right: 0;
-    top: 0;
-    height: var(--nav-offset); /* covers from page top to just under navbar */
-    pointer-events: none;
-    /* invisible; we use JS to apply blur to elements themselves, so the overlay must not be visible */
-    background: transparent;
-    opacity: 1;
-    transition: opacity 220ms ease;
-    /* allow variable blur amount */
-    --top-blur: 0px;
-    backdrop-filter: blur(var(--top-blur));
-    z-index: 900; /* below navbar (1000) but above content */
-}
-.top-blur.visible { opacity: 1; }
+/* top-blur removed: overlay/blur handled by no CSS (removed) */
 
 /* make navbar always on top */
 .navbar { z-index: 1000; }
@@ -379,4 +387,48 @@ section {
 /* Provide a scroll offset for in-page anchors in browsers that don't use scrollMarginTop from JS */
 section {
     scroll-margin-top: 120px;
+}
+
+/* CV layout styles */
+.cv-list { margin-top: 18px; position: relative; /* timeline variables */ --cv-left: 140px; --cv-dot-size: 16px; }
+.cv-list h2 { margin: 18px 0 8px; font-size: 1.05rem; }
+
+/* Timeline vertical line */
+.cv-list::before {
+    content: '';
+    position: absolute;
+    left: var(--cv-left); /* align with the right edge of the period column */
+    top: 8px;
+    bottom: 8px;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--timeline-line-top), var(--timeline-line-bottom));
+    border-radius: 2px;
+}
+
+.cv-entry {
+    display: grid;
+    grid-template-columns: var(--cv-left) 1fr;
+    gap: 18px;
+    align-items: start;
+    padding: 18px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    position: relative;
+}
+
+.cv-period { color: var(--muted); font-weight: 600; }
+.cv-details h3 { margin: 0 0 6px 0; font-size: 1rem; }
+.cv-details ul { margin: 0; padding-left: 18px; color: var(--muted); }
+
+/* nested list inside CV details */
+.cv-details ul.submodules { margin-top: 6px; padding-left: 18px; list-style-type: disc; }
+.cv-details ul.submodules li { margin: 6px 0; color: var(--muted); font-size: 0.95rem; }
+
+/* Marker dot on the timeline for each entry (removed) */
+.cv-entry::before { display: none; }
+
+@media (max-width: 880px) {
+    .cv-list::before { display: none; }
+    .cv-entry { display: block; padding-left: 0; }
+    .cv-period { margin-bottom: 6px; }
+    .cv-entry::before { display: none; }
 }
