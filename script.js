@@ -29,11 +29,77 @@ document.addEventListener('DOMContentLoaded', function () {
   // top-blur removed: no overlay toggling required
 
   // Smooth scrolling for clicks (scroll-behavior supported by CSS too)
+  // helper: select an element's text content (works for plain text or links)
+  function selectElementText(el) {
+    if (!el) return;
+    try {
+      const selection = window.getSelection();
+      const range = document.createRange();
+      range.selectNodeContents(el);
+      selection.removeAllRanges();
+      selection.addRange(range);
+    } catch (err) {
+      // fallback: try to focus and select if it's an input
+      if (el.select) {
+        el.select();
+      }
+    }
+  }
+
+  // select a specific substring inside an element's text nodes
+  function selectSubstringInElement(el, substring) {
+    if (!el) return;
+    if (!substring) return selectElementText(el);
+    const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null, false);
+    let node = walker.nextNode();
+    while (node) {
+      const idx = node.data.indexOf(substring);
+      if (idx !== -1) {
+        const range = document.createRange();
+        range.setStart(node, idx);
+        range.setEnd(node, idx + substring.length);
+        const sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(range);
+        return;
+      }
+      node = walker.nextNode();
+    }
+    // fallback: select the whole element if substring not found
+    selectElementText(el);
+  }
+
   navLinks.forEach(link => {
     link.addEventListener('click', (e) => {
       e.preventDefault();
       const target = document.querySelector(link.getAttribute('href'));
-      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      if (!target) return;
+      // perform smooth scroll
+      const href = link.getAttribute('href');
+      if (href === '#email') {
+        // scroll so the CV intro heading (the intro title) is just below the navbar
+        const navOffset = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--nav-offset')) || 120;
+        const introHeading = document.querySelector('.cv-intro h3, .cv-intro h2, .cv-intro .cv-details');
+        if (introHeading) {
+          const rect = introHeading.getBoundingClientRect();
+          const top = window.scrollY + rect.top - navOffset + 8; // small gap under navbar
+          window.scrollTo({ top, behavior: 'smooth' });
+        } else {
+          // fallback: position the email element under the navbar
+          const rect = target.getBoundingClientRect();
+          const top = window.scrollY + rect.top - navOffset + 8;
+          window.scrollTo({ top, behavior: 'smooth' });
+        }
+
+        // wait for the smooth scroll to complete visually; 450ms is a reasonable default
+        const emailString = (target.textContent || '').split(':')[1] ? (target.textContent.split(':')[1] || '').trim() : '';
+        setTimeout(() => {
+          if (emailString) selectSubstringInElement(target, emailString);
+          else selectElementText(target);
+        }, 450);
+      } else {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
     });
   });
 

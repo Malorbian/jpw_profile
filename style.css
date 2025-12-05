@@ -54,6 +54,12 @@ body::before {
     /* chip defaults fallback: semi-transparent darker than page */
     --chip-bg-default-fallback: rgba(0,0,0,0.18);
     --chip-text-default: var(--text); /* match main text color in dark mode */
+    /* CV timeline and entry colors */
+    --cv-line-start: rgba(255,255,255,0.12);
+    --cv-line-end: rgba(255,255,255,0.04);
+    --cv-entry-border: rgba(255,255,255,0.04);
+    /* shot background */
+    --shot-bg: rgba(255,255,255,0.03);
 }
 
 html.light {
@@ -86,6 +92,12 @@ html.light {
     /* chip defaults for light theme (fallback) */
     --chip-bg-default-fallback: #efefef; /* light gray background in light mode */
     --chip-text-default: #000000; /* text black in light mode */
+    /* CV timeline and entry colors for light mode */
+    --cv-line-start: rgba(0,0,0,0.12);
+    --cv-line-end: rgba(0,0,0,0.06);
+    --cv-entry-border: rgba(0,0,0,0.06);
+    /* shot background in light mode */
+    --shot-bg: rgba(0,0,0,0.04);
 }
 
 /* NAVBAR */
@@ -301,7 +313,7 @@ section {
 .shot {
     min-height: 80vh;
     border-radius: 12px;
-    background: rgba(255,255,255,0.03);
+    background: var(--shot-bg);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -377,14 +389,11 @@ section {
     top: 8px;
     bottom: 8px;
     width: 2px;
-    background: linear-gradient(to bottom, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+    background: linear-gradient(to bottom, var(--cv-line-start), var(--cv-line-end));
     border-radius: 2px;
 }
 
-/* Light mode: make the CV timeline a visible light-gray line */
-html.light .cv-list::before {
-    background: linear-gradient(to bottom, rgba(0,0,0,0.12), rgba(0,0,0,0.06));
-}
+/* (CV timeline colors are now controlled via variables in :root / html.light) */
 
 .cv-entry {
     display: grid;
@@ -392,8 +401,36 @@ html.light .cv-list::before {
     gap: 18px;
     align-items: start;
     padding: 18px 0;
-    border-bottom: 1px solid rgba(255,255,255,0.04);
+    border-bottom: 1px solid var(--cv-entry-border);
     position: relative;
+}
+
+/* Intro block at the top of the CV: align visually with other CV entries */
+.cv-intro {
+    display: block;
+    width: 100%;
+    padding: 18px 0;
+    border-bottom: 1px solid var(--cv-entry-border);
+    text-align: left; /* match About section alignment */
+}
+
+/* make the intro heading and list match the CV details styling */
+.cv-intro .cv-details,
+.cv-intro h2 {
+    margin: 18px 0 8px; /* match .cv-list h2 spacing */
+    font-size: 1.05rem; /* match .cv-list h2 size */
+}
+
+.cv-intro ul {
+    margin: 0;
+    padding-left: 18px;
+    color: var(--muted);
+}
+
+.cv-intro .cv-details {
+    margin: 0 0 6px 0;
+    font-size: 1rem;
+    color: var(--muted);
 }
 
 .cv-period { color: var(--muted); font-weight: 600; }
@@ -412,4 +449,6 @@ html.light .cv-list::before {
     .cv-entry { display: block; padding-left: 0; }
     .cv-period { margin-bottom: 6px; }
     .cv-entry::before { display: none; }
+    .cv-intro { display: block; padding-left: 0; }
+    .cv-intro > * { grid-column: auto; }
 }
