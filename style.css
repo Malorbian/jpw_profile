@@ -244,10 +244,24 @@ section {
     transition: transform 0.08s ease, box-shadow 0.12s ease, background-color 0.15s ease;
 }
 
-.skill-chip:focus,
-.skill-chip:hover {
+button.skill-chip:hover,
+button.skill-chip:focus {
+    /* only interactive buttons should show hover/focus motion */
     transform: translateY(-2px);
     box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+}
+
+/* non-interactive notes for strengths (used for items like Agile, logical thinking) */
+.skill-note {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    background: var(--primary-bg);
+    color: var(--primary-text);
+    font-size: 14px;
+    line-height: 1;
 }
 
 .skill-color {
