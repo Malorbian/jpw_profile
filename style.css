@@ -313,27 +313,48 @@ button.skill-chip:focus {
     margin-top: 18px;
     display: block;
     gap: 32px;
+    padding-top: 30px;
 }
 
 .project-group {
     display: flex;
     gap: 24px;
     align-items: stretch; /* ensure left and right columns span the same group height */
+    width: 100%;
+    max-width: 980px; /* keep group constrained to the section width */
+    margin: 0 auto; /* center the combined left+right content */
+    padding-bottom: 30px;
 }
 
-.project-left { width: 66%; }
-.project-right { width: 34%; position: relative; display: flex; flex-direction: column; }
+.project-left { flex: 1; }
+.project-right { flex: 0 0 320px; position: relative; display: flex; flex-direction: column; }
 
 .shot {
-    min-height: 80vh;
-    border-radius: 12px;
-    background: var(--shot-bg);
+    min-height: 220px;
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     color: var(--muted);
     font-size: 1rem;
     margin-bottom: 18px;
+    overflow: hidden;
+    padding-bottom: 12px;
+}
+
+.shot img {
+    display: block;
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+}
+
+.shot-caption {
+    margin-top: 10px;
+    font-size: 0.95rem;
+    color: var(--muted);
+    text-align: center;
+    width: 100%;
 }
 
 .project-panel {
