@@ -251,19 +251,6 @@ button.skill-chip:focus {
     box-shadow: 0 6px 18px rgba(0,0,0,0.12);
 }
 
-/* non-interactive notes for strengths (used for items like Agile, logical thinking) */
-.skill-note {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 12px;
-    border-radius: 8px;
-    background: var(--primary-bg);
-    color: var(--primary-text);
-    font-size: 14px;
-    line-height: 1;
-}
-
 .skill-color {
     width: 14px;
     height: 14px;
